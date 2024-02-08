@@ -20,21 +20,8 @@ export class PersonListComponent {
   EditFormComponent = inject(EditFormComponent);
   pageTitle = 'People (only me and some weird letter combos) List';
 
-  //Entity , Perrson Signal
-  /* persons = effect(() => {
-    try {
-      return this.PersonService.Persons();
 
-    } catch(e) {
-      this.errorMessage=typeof e==='string'? e :'Error';
-      return [];
-    }
-  });
-  errorMessage: string; */
   persons = this.PersonService.Persons();
-  //i know it's not persons it's just weird to call it people
-  //persons=toSignal(this.PersonService.getProducts(), { initialValue: null });
-  //selectedPersonId=this.PersonService.selectedPersonId
 
   OnSelected(id: number) {
     console.log("this is the selected id", id)
@@ -49,14 +36,22 @@ export class PersonListComponent {
 
   }
   showForm(id: number) {
-    this.PersonService.getById(id)
+    this.PersonService.setSelectedPerson(id);
+     this.PersonService.getById();
     this.dialog.open(EditFormComponent, {
 
       width: '450px',
       height: '300px',
 
     });
+  }
+  Delete(id: number) {
+    this.PersonService.deletePerson(id);
+   /*  this.dialog.open(EditFormComponent, {
 
+      width: '450px',
+      height: '300px',
 
+    }); */
   }
 }

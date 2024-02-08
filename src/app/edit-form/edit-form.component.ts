@@ -22,19 +22,17 @@ export class EditFormComponent implements OnInit {
 
   PersonService = inject(PersonService);
   OnePerson = this.PersonService.OnePerson();
-  id = signal(0);
   ngOnInit(): void {
-    //throw new Error('Method not implemented.');
     this.editForm = new FormGroup({
       id: new FormControl(this.OnePerson.id),
       name: new FormControl(this.OnePerson.name),
       age: new FormControl(this.OnePerson.age)
 
     });
-   
+  
   }
   constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<EditFormComponent>, private personService: PersonService, private dialog: MatDialog) {
-
+   
   }
 
 
@@ -46,7 +44,7 @@ export class EditFormComponent implements OnInit {
     };
     this.personService.updatePerson(updatedPerson);
     console.log(updatedPerson);
-
+    this.dialogRef.close();
   }
   OnCancel(): void {
     this.dialogRef.close();

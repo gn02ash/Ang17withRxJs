@@ -1,4 +1,4 @@
-import { Injectable, WritableSignal, inject, signal } from '@angular/core';
+import { Injectable, WritableSignal, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Person } from './person';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -11,20 +11,29 @@ export class PersonService {
   http = inject(HttpClient);
   personsUrl = 'http://localhost:5049/api/Person';
 
-  //retrieve list of people
   private person$ = this.http.get<Person[]>(this.personsUrl);
-  //expose signal
-  //persons=toSignal(this.person$,  {initialValue:[]as Person[]})
+
+ 
 
   selectedPersonId=signal<number>(0);
   Persons: WritableSignal<Person[]> = signal([]);
   OnePerson: WritableSignal<Person> = signal({ id: 1, name: '', age: 15 });
  
+
+
+
   addPerson(person: Person) {
     this.http.post<Person>(this.personsUrl, person).subscribe((createdPerson) => {
       this.Persons.set([...this.Persons(), createdPerson])
     })
   }
+  setSelectedPerson(id: number) {
+    this.selectedPersonId.set(id);
+    this.getById();
+    console.log("this id", this.selectedPersonId)
+  }
+
+
   updatePerson(updatedPerson: Person): Person {
     this.http.put<Person>(this.personsUrl + "/" + updatedPerson.id, updatedPerson).subscribe(() => {
       this.Persons.set(this.Persons().map(person => (
@@ -34,25 +43,34 @@ export class PersonService {
     })
     return updatedPerson;
   }
+
+
+
   deletePerson(personId: number): void {
-    this.http.delete<void>(this.personsUrl + "/" + personId).subscribe(() => {
+    
+    this.http.delete<number>(this.personsUrl + "/" + personId).subscribe(() => {
       this.Persons.set(this.Persons().filter(person => person.id !== personId));
     })
   }
-  id = signal(0);
-  getById(id:number): void {
-    this.http.get<Person>(this.personsUrl + "/" + id).subscribe((person) => {
+
+  getById(): void {
+    this.http.get<Person>(this.personsUrl + "/" + this.selectedPersonId()).subscribe((person) => {
       (this.OnePerson.set(person))
     })
   }
-  getById2(PersonId: number): Person {
+
+
+
+
+
+ /*  getById2(PersonId: number): Person {
     this.http.get<Person>(this.personsUrl + "/" + PersonId).subscribe(
 
       (person) => {
         (this.OnePerson.set(person))
       })
     return this.OnePerson();
-  }
+  } */
   constructor() {
     this.person$.subscribe((newpeople) => {
       this.Persons.set(newpeople);

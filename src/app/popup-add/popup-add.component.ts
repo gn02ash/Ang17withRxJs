@@ -44,6 +44,7 @@ export class PopupAddComponent  implements OnInit{
     };
     this.personService.addPerson(updatedPerson);
    console.log(updatedPerson);
+   this.dialogRef.close();
     
   }
   OnCancel():void
