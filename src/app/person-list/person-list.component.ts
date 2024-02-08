@@ -27,14 +27,7 @@ export class PersonListComponent {
     this.PersonService.Persons()
   )
   constructor(private popupService: PopupService, private dialog: MatDialog) {
-    effect(() => {
-      this.PersonService.OnePerson();
-      this.dialog.open(EditFormComponent, {
-        width: '450px',
-        height: '300px',
-      });
-      console.log("i was executed");
-    }) 
+  
   }
 
   openPopup() {
@@ -42,9 +35,11 @@ export class PersonListComponent {
   }
 
   showForm(id: number) {
-    this.PersonService.setselectedId(id);
     this.PersonService.getById(id);
-   
+    this.dialog.open(EditFormComponent, {
+      width: '450px',
+      height: '300px',
+    });
   }
   Delete(id: number) {
     this.dialog.open(ConfirmDeleteComponent, {
