@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Person } from './person';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Observable, retry } from 'rxjs';
+import { error } from 'console';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,8 @@ export class PersonService {
 
   addPerson(person: Person) {
     this.http.post<Person>(this.personsUrl, person).subscribe((createdPerson) => {
-      this.Persons.set([...this.Persons(), createdPerson])
+      this.Persons.set([...this.Persons(), createdPerson]);
+      ( error: any)=>console.log("hey you have an   ERROR ",error)
     })
   }
   setSelectedPerson(id: number) {
@@ -39,29 +41,38 @@ export class PersonService {
       this.Persons.set(this.Persons().map(person => (
         (person.id === updatedPerson.id),
         (person.name === updatedPerson.name),
-        (person.age === updatedPerson.age) ? updatedPerson : person)))
-    })
+        (person.age === updatedPerson.age) ? updatedPerson : person)));
+    
+        ( error: any)=>console.log("hey you have an   ERROR ",error)  }
+    )
     return updatedPerson;
+    
   }
 
 
 
-  deletePerson(personId: number): void {
+  deletePerson(): void {
     
-    this.http.delete<number>(this.personsUrl + "/" + personId).subscribe(() => {
-      this.Persons.set(this.Persons().filter(person => person.id !== personId));
+    this.http.delete<number>(this.personsUrl + "/" + this.id()).subscribe(() => {
+      this.Persons.set(this.Persons().filter(person => person.id !==this.id()));
+      ( error: any)=>console.log("hey you have an   ERROR ",error)
     })
   }
 
   getById(): void {
     this.http.get<Person>(this.personsUrl + "/" + this.selectedPersonId()).subscribe((person) => {
-      (this.OnePerson.set(person))
-    })
+      (this.OnePerson.set(person));
+      ( error: any)=>console.log("hey you have an   ERROR ",error)
+    });
   }
 
 
 
-
+  id=signal(0);
+  setselectedId(num:number){
+    this.id.set(num)
+    console.log(this.id())
+  }
 
  /*  getById2(PersonId: number): Person {
     this.http.get<Person>(this.personsUrl + "/" + PersonId).subscribe(

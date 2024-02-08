@@ -45,6 +45,7 @@ export class EditFormComponent implements OnInit {
     this.personService.updatePerson(updatedPerson);
     console.log(updatedPerson);
     this.dialogRef.close();
+    location.reload();
   }
   OnCancel(): void {
     this.dialogRef.close();

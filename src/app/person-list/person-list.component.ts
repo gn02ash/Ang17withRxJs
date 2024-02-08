@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { PopupService } from '../popup-add/popup-add.service'
 import { EditFormComponent } from '../edit-form/edit-form.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { ConfirmDeleteComponent } from '../confirm-delete/confirm-delete.component';
 
 @Component({
   selector: 'app-person-list',
@@ -46,12 +47,19 @@ export class PersonListComponent {
     });
   }
   Delete(id: number) {
-    this.PersonService.deletePerson(id);
+    //this.PersonService.deletePerson(id);
    /*  this.dialog.open(EditFormComponent, {
 
       width: '450px',
       height: '300px',
 
     }); */
+    this.dialog.open(ConfirmDeleteComponent, {
+
+      width: '400px',
+      height: '130px',
+
+    });
+    this.PersonService.setselectedId(id);
   }
 }
