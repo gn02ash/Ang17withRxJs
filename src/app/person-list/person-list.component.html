@@ -1,18 +1,35 @@
-  <div class="card-header">
-    {{pageTitle}}
-  </div>
-
-  <div class="card-body">
-    <!-- <div style="height: 40px;" class="row" *ngFor="let task of userTasks()">
-      <div class="col-md-6">{{task.title}}</div>
-      <div class="col-md-2">{{task.completed}}</div>
-      <div class="col-md-4">
-        <button class='btn btn-primary'
-                *ngIf="!task.completed"
-                (click)="markComplete(task)">Mark as Complete
+<div class="card">
+    <div class="card-header d-flex justify-content-around">
+        {{pageTitle}}
+        <button (click)="openPopup()"class='btn btn-primary'>add
         </button>
-      </div> 
-    </div>-->
-    HeLLLLLLLOOOOOOOOOOOOOOOOOOOOOOO
+       
+    </div>
 
-  </div>
+    <div class="card-body">
+
+        <div class="list-group">
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-4 p-2">Name</div>
+                <div class="col-md-4 p-2">Age</div>
+                <div class="col-md-4 p-2"></div>
+                @for (person of persons; track person.id)
+
+                {<div class="col-md-4 p-2">{{person.name}}</div>
+                <div class="col-md-4 p-2">{{person.age}}</div>
+                <div class="col-md-2 p-2 ">
+                    <button class='btn btn-secondary' (click)="showForm(person.id)">Edit
+                    </button>
+                </div>
+                <div class="col-md-2 p-2 ">
+                    <button class='btn btn-danger'>delete
+                    </button>
+
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- /*(click)="markComplete(task)" -->
