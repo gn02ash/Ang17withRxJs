@@ -18,13 +18,10 @@ export class ConfirmDeleteComponent {
   OnCancel(): void {
     this.dialogRef.close();
   }
-  constructor( private dialogRef: MatDialogRef<ConfirmDeleteComponent>, private dialog: MatDialog) {
-   
-  }
+  constructor( private dialogRef: MatDialogRef<ConfirmDeleteComponent>) {}
 
   OnConfirm(): void {
     this.dialogRef.close();
     this.PersonService.deletePerson();
-    location.reload();
   }
 }

@@ -1,8 +1,7 @@
 <div class="card">
     <div class="card-header d-flex justify-content-around">
         {{pageTitle}}
-        <button (click)="openPopup()"class='btn btn-primary'>add
-        </button>
+        <button (click)="openPopup()"class='btn btn-primary'>Add</button>
        
     </div>
 
@@ -13,7 +12,7 @@
                 <div class="col-md-4 p-2">Name</div>
                 <div class="col-md-4 p-2">Age</div>
                 <div class="col-md-4 p-2"></div>
-                @for (person of persons; track person.id)
+                @for (person of persons(); track person.id)
 
                 {<div class="col-md-4 p-2">{{person.name}}</div>
                 <div class="col-md-4 p-2">{{person.age}}</div>

@@ -22,43 +22,32 @@ export class PersonListComponent {
   pageTitle = 'People (only me and some weird letter combos) List';
 
 
-  persons = this.PersonService.Persons();
-
-  OnSelected(id: number) {
-    console.log("this is the selected id", id)
-    // this.PersonService.setSelectedPerson(id)
+  persons = computed(() =>
+    this.PersonService.Persons()
+  )
+  constructor(private popupService: PopupService, private dialog: MatDialog) {
+   
+    effect(() => {
+      this.PersonService.OnePerson();
+      this.dialog.open(EditFormComponent, {
+        width: '450px',
+        height: '300px',
+      });
+    })
   }
-
-
-  constructor(private popupService: PopupService, private dialogRef: MatDialogRef<EditFormComponent>, private dialog: MatDialog) { }
 
   openPopup() {
     this.popupService.openPopup();
 
   }
   showForm(id: number) {
-    this.PersonService.setSelectedPerson(id);
-     this.PersonService.getById();
-    this.dialog.open(EditFormComponent, {
-
-      width: '450px',
-      height: '300px',
-
-    });
+    this.PersonService.setselectedId(id);
+   
   }
   Delete(id: number) {
-    //this.PersonService.deletePerson(id);
-   /*  this.dialog.open(EditFormComponent, {
-
-      width: '450px',
-      height: '300px',
-
-    }); */
     this.dialog.open(ConfirmDeleteComponent, {
-
       width: '400px',
       height: '130px',
-
     });
     this.PersonService.setselectedId(id);
   }

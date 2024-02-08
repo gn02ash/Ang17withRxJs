@@ -1,6 +1,6 @@
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Person } from './../person';
-import { Component, Injectable, Input, OnInit, WritableSignal, effect, inject, signal } from '@angular/core';
+import { Component, Injectable, Input, OnInit, WritableSignal, computed, effect, inject, signal } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MatDialog } from '@angular/material/dialog';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -21,31 +21,28 @@ export class EditFormComponent implements OnInit {
   editForm: FormGroup;
 
   PersonService = inject(PersonService);
-  OnePerson = this.PersonService.OnePerson();
+  OnePerson = computed(() => this.PersonService.OnePerson());
   ngOnInit(): void {
+    
     this.editForm = new FormGroup({
-      id: new FormControl(this.OnePerson.id),
-      name: new FormControl(this.OnePerson.name),
-      age: new FormControl(this.OnePerson.age)
+      id: new FormControl(this.OnePerson().id),
+      name: new FormControl(this.OnePerson().name),
+      age: new FormControl(this.OnePerson().age)
 
     });
-  
   }
-  constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<EditFormComponent>, private personService: PersonService, private dialog: MatDialog) {
-   
-  }
+  constructor(private dialogRef: MatDialogRef<EditFormComponent>, private personService: PersonService) {}
 
 
   OnSubmit(): void {
     const updatedPerson: Person = {
-      id: this.OnePerson.id,
+      id: this.OnePerson().id,
       name: this.editForm.value.name,
       age: this.editForm.value.age,
     };
     this.personService.updatePerson(updatedPerson);
     console.log(updatedPerson);
     this.dialogRef.close();
-    location.reload();
   }
   OnCancel(): void {
     this.dialogRef.close();
