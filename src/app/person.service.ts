@@ -4,6 +4,7 @@ import { Person } from './person';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Observable, retry } from 'rxjs';
 import { error } from 'console';
+import { EditFormComponent } from './edit-form/edit-form.component';
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +12,11 @@ import { error } from 'console';
 export class PersonService {
   http = inject(HttpClient);
   personsUrl = 'http://localhost:5049/api/Person';
-
   private person$ = this.http.get<Person[]>(this.personsUrl);
   Persons: WritableSignal<Person[]> = signal([]);
   OnePerson: WritableSignal<Person> = signal({ id: 0, name: '', age: 0 });
+  
+  //OnePerson = signal<Person|null>(null);
   addPerson(person: Person) {
     this.http.post<Person>(this.personsUrl, person).subscribe((createdPerson) => {
       this.Persons.set([...this.Persons(), createdPerson]);
@@ -25,23 +27,13 @@ export class PersonService {
   id = signal(0);
   setselectedId(num: number) {
     this.id.set(num)
-    this.getById(num);
-    console.log("this id", this.id())
   }
 
-
-  updatePerson(updatedPerson: Person): Person {
+  updatePerson(updatedPerson: Person){
     this.http.put<Person>(this.personsUrl + "/" + updatedPerson.id, updatedPerson).subscribe(() => {
-      this.Persons.set(this.Persons().map(person => (
-        (person.id === updatedPerson.id),
-        (person.name === updatedPerson.name),
-        (person.age === updatedPerson.age) ? updatedPerson : person)));
-
-
-    }
+      this.Persons.set(this.Persons().map((person)=>(person.id==updatedPerson.id)?updatedPerson:person));  }
     )
-    return updatedPerson;
-
+    
   }
 
 
@@ -54,18 +46,16 @@ export class PersonService {
     })
   }
 
- getById(id:number): void {
+ getById(id:number) {
     this.http.get<Person>(this.personsUrl + "/" + id).subscribe((person) => {
       this.OnePerson.set(person);
     });
   }
-
-
-
  
   constructor() {
     this.person$.subscribe((newpeople) => {
       this.Persons.set(newpeople);
     })
+    
   }
 }

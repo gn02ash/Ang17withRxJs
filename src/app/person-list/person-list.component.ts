@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, Injectable, WritableSignal, computed, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { PersonService } from '../person.service';
 import { Person } from '../person';
@@ -15,6 +15,7 @@ import { ConfirmDeleteComponent } from '../confirm-delete/confirm-delete.compone
   templateUrl: './person-list.component.html',
   styleUrl: './person-list.component.css'
 })
+@Injectable({providedIn: 'root'})
 export class PersonListComponent {
 
   PersonService = inject(PersonService); // inject func makes it more obvi that we're injecting a dependency
@@ -26,22 +27,23 @@ export class PersonListComponent {
     this.PersonService.Persons()
   )
   constructor(private popupService: PopupService, private dialog: MatDialog) {
-   
     effect(() => {
       this.PersonService.OnePerson();
       this.dialog.open(EditFormComponent, {
         width: '450px',
         height: '300px',
       });
-    })
+      console.log("i was executed");
+    }) 
   }
 
   openPopup() {
     this.popupService.openPopup();
-
   }
+
   showForm(id: number) {
     this.PersonService.setselectedId(id);
+    this.PersonService.getById(id);
    
   }
   Delete(id: number) {

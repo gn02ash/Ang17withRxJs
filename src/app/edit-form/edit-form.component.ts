@@ -23,12 +23,10 @@ export class EditFormComponent implements OnInit {
   PersonService = inject(PersonService);
   OnePerson = computed(() => this.PersonService.OnePerson());
   ngOnInit(): void {
-    
     this.editForm = new FormGroup({
       id: new FormControl(this.OnePerson().id),
       name: new FormControl(this.OnePerson().name),
       age: new FormControl(this.OnePerson().age)
-
     });
   }
   constructor(private dialogRef: MatDialogRef<EditFormComponent>, private personService: PersonService) {}
@@ -41,7 +39,6 @@ export class EditFormComponent implements OnInit {
       age: this.editForm.value.age,
     };
     this.personService.updatePerson(updatedPerson);
-    console.log(updatedPerson);
     this.dialogRef.close();
   }
   OnCancel(): void {
