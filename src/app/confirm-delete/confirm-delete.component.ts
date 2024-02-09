@@ -22,6 +22,6 @@ export class ConfirmDeleteComponent {
 
   OnConfirm(): void {
     this.dialogRef.close();
-    this.PersonService.deletePerson();
+    //this.PersonService.deletePerson();
   }
 }

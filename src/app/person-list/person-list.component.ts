@@ -7,6 +7,7 @@ import { PopupService } from '../popup-add/popup-add.service'
 import { EditFormComponent } from '../edit-form/edit-form.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ConfirmDeleteComponent } from '../confirm-delete/confirm-delete.component';
+import { cp } from 'fs';
 
 @Component({
   selector: 'app-person-list',
@@ -21,7 +22,6 @@ export class PersonListComponent {
   PersonService = inject(PersonService); // inject func makes it more obvi that we're injecting a dependency
   EditFormComponent = inject(EditFormComponent);
   pageTitle = 'People (only me and some weird letter combos) List';
-
 
   persons = computed(() =>
     this.PersonService.Persons()
@@ -42,10 +42,11 @@ export class PersonListComponent {
     });
   }
   Delete(id: number) {
-    this.dialog.open(ConfirmDeleteComponent, {
+   /*  this.dialog.open(ConfirmDeleteComponent, {
       width: '400px',
       height: '130px',
-    });
+    }); */
     this.PersonService.setselectedId(id);
+    this.PersonService.deletePerson(id);
   }
 }

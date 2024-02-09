@@ -7,7 +7,6 @@ import { PopupService } from   './popup-add/popup-add.service'
 import { NgModule }      from '@angular/core';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { HttpClientModule } from '@angular/common/http';
-import { ErrorHandleService } from './error-handle.service';
 @Component({
   selector: 'app-root',
   standalone: true,
