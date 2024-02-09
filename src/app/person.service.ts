@@ -15,12 +15,17 @@ export class PersonService {
   private person$ = this.http.get<Person[]>(this.personsUrl);
   Persons: WritableSignal<Person[]> = signal([]);
   OnePerson: WritableSignal<Person> = signal({ id: 0, name: '', age: 0 });
+  public errorMessage=signal<string>('')
+  public showError=signal(false);
 
-  //OnePerson = signal<Person|null>(null);
   addPerson(person: Person) {
     this.http.post<Person>(this.personsUrl, person).subscribe((createdPerson) => {
       this.Persons.set([...this.Persons(), createdPerson]),
-      (error: any)=>{console.log("encoutered error",error)};
+        (err: HttpErrorResponse) => {
+          this.errorMessage.set(err.message);
+          console.log( "this is the error",this.errorMessage())
+          this.showError.set(true);
+        }
     });
   }
   id = signal(0);
@@ -30,14 +35,25 @@ export class PersonService {
 
   updatePerson(updatedPerson: Person) {
     this.http.put<Person>(this.personsUrl + "/" + updatedPerson.id, updatedPerson).subscribe(() => {
-      this.Persons.set(this.Persons().map((person) => (person.id == updatedPerson.id) ? updatedPerson : person));}) }
+      this.Persons.set(this.Persons().map(
+        (person) => (person.id == updatedPerson.id) ? updatedPerson : person))
+        , (err: HttpErrorResponse) => {
+          this.errorMessage.set(err.message);
+          this.showError.set(true);
+        }
+    })
+  }
 
 
 
   deletePerson(): void {
 
     this.http.delete<number>(this.personsUrl + "/" + this.id()).subscribe(() => {
-      this.Persons.set(this.Persons().filter(person => person.id !== this.id()));
+      this.Persons.set(this.Persons().filter(person => person.id !== this.id())),
+      (err: HttpErrorResponse) => {
+        this.errorMessage.set(err.message);
+        this.showError.set(true);
+      }
 
     })
   }
@@ -45,7 +61,10 @@ export class PersonService {
   getById(id: number) {
     this.http.get<Person>(this.personsUrl + "/" + id).subscribe((person) => {
       this.OnePerson.set(person),
-      (error: any)=>{console.log("encoutered error",error)};
+      (err: HttpErrorResponse) => {
+        this.errorMessage.set(err.message);
+        this.showError.set(true);
+      };
     });
   }
 

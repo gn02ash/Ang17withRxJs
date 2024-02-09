@@ -1,4 +1,4 @@
-import { Component, Injectable, Input, OnInit, effect, inject } from '@angular/core';
+import { Component, Injectable, Input, OnInit, computed, effect, inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { PersonService } from '../person.service';
 import { Person } from '../person';
@@ -18,15 +18,18 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 })
 export class PopupAddComponent implements OnInit {
   editForm: FormGroup;
-
+  
   PersonService = inject(PersonService);
+  showError=computed(()=>this.PersonService.showError())
+  Error=computed(()=>this.PersonService.errorMessage())
   @Input() person: Person;
   ngOnInit(): void {
  
     this.editForm = new FormGroup({
       id: new FormControl(),
       name: new FormControl(),
-      age: new FormControl()
+      age: new FormControl(),
+      error:new FormControl(''),
     });
 
   }
@@ -42,8 +45,10 @@ export class PopupAddComponent implements OnInit {
       age: this.editForm.value.age,
     };
     this.personService.addPerson(updatedPerson);
+    //this.PersonService.showError.set(false);
+    this.editForm.value.error=this.PersonService.errorMessage();
     console.log(updatedPerson);
-    this.dialogRef.close();
+   if(!this.showError){ this.dialogRef.close();}
 
   }
   OnCancel(): void {

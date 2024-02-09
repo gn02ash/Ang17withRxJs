@@ -6,10 +6,12 @@ import { EditFormComponent } from './edit-form/edit-form.component';
 import { PopupService } from   './popup-add/popup-add.service'
 import { NgModule }      from '@angular/core';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { HttpClientModule } from '@angular/common/http';
+import { ErrorHandleService } from './error-handle.service';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet,PersonListComponent,EditFormComponent,    MatDialogModule],
+  imports: [RouterOutlet,PersonListComponent,EditFormComponent,   HttpClientModule, MatDialogModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
