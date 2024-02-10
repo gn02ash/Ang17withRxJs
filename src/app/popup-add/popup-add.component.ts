@@ -1,5 +1,5 @@
 import { Component, Injectable, Input, OnInit, computed, effect, inject, signal } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { PersonService } from '../person.service';
 import { Person } from '../person';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -26,32 +26,54 @@ export class PopupAddComponent implements OnInit {
   @Input() person: Person;
   ngOnInit(): void {
 
-    this.editForm = new FormGroup({
-      id: new FormControl(),
-      name: new FormControl(),
-      age: new FormControl(),
+    this.editForm = this.fb.group({
+      id: [0],
+      name: [null, [Validators.required, Validators.pattern("^[a-zA-Z ]+$")]],
+      age: [null, [Validators.required, Validators.min(16), Validators.max(150)]],
 
     });
 
   }
   constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<PopupAddComponent>, private personService: PersonService, private dialog: MatDialog) {
-
   }
+  getErrorMessage(controlName: string): string {
+    const control = this.editForm.get(controlName);
 
+    if (control) {
+      if (control.hasError('required')) {
+        console.log("giii");
+        return 'This field is required.';
+      }
+      else if (control.hasError('pattern')) {
+        return 'Name must be a valid string.';
+      }
+      else if (control.hasError('min')) {
+        return 'Age cant be less than 16 years Old.';
+
+      } else if (control.hasError('max')) {
+        return ' Age cant be older than 150 years Old (you are not a Vampire ISTG!).';
+
+      }
+    }
+
+    return '';
+  }
   OnSubmit(): void {
-    const updatedPerson: Person = {
-      id: 0,
-      name: this.editForm.value.name,
-      age: this.editForm.value.age,
-    };
-    
-    this.personService.addPerson(updatedPerson);
-    this.personService.showNameError.set(false);
-    this.personService.showAgeError.set(false);
-    if (!this.showAgeError && !this.showNameError) {
+
+    if (this.editForm.valid) {
+      const updatedPerson: Person = {
+        id: 0,
+        name: this.editForm.value.name,
+        age: this.editForm.value.age,
+      };
+
+      this.personService.addPerson(updatedPerson);
+      this.personService.showNameError.set(false);
+      this.personService.showAgeError.set(false);
+
       this.dialogRef.close();
     }
-}
+  }
 
   OnCancel(): void {
     this.dialogRef.close();
